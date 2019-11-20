@@ -13,6 +13,9 @@
 
 namespace  {
     QStringList icon_extensions = {"png", "svg", "xpm"};
+
+    // if QIcon::themeName() returns an empty string
+    QString fallback_theme_name = "Papirus-Dark";
 }
 
 
@@ -66,6 +69,10 @@ XDG::IconLookup *XDG::IconLookup::instance()
 {
     static IconLookup *instance_ = nullptr;
     if (!instance_){
+        // use fallback theme if unable to get theme name
+        if (QIcon::themeName() == "")
+            QIcon::setThemeName(fallback_theme_name);
+
         qInfo() << "Systems icon theme is:" << QIcon::themeName();
         instance_ = new IconLookup();
     }
